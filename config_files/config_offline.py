@@ -1,7 +1,7 @@
-DATA_PATH = ''
+DATA_PATH = r'C:\Users\brainhacker\Desktop\nd_data'
 
 TRIGGER_DEVICE = None
-TRIGGER_FILE = r''
+TRIGGER_FILE = r'C:\Users\brainhacker\git\NeuroDecode\neurodecode\triggers\triggerdef_16'
 
 START_VOICE = r'.\sounds\startRecordingVoice.mp3'
 END_VOICE = r'.\sounds\EndRecordingVoice.mp3'

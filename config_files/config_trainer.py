@@ -1,13 +1,13 @@
 #-------------------------------------------
 # Data 
 #-------------------------------------------
-DATA_PATH = r'C:\Users\adesvachez\git\nd_data\AlphaTheta\a1-AlphaTheta\fif'
+DATA_PATH =  r'C:\Users\brainhacker\Desktop\nd_data'
 
 EPOCH = []
 
 #-------------------------------------------
 # Trigger
 #-------------------------------------------
-TRIGGER_FILE = r''
+TRIGGER_FILE = r'C:\Users\brainhacker\git\NeuroDecode\neurodecode\triggers\triggerdef_16'
 TRIGGER_DEF = ['INIT']
 
