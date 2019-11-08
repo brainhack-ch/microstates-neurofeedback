@@ -10,9 +10,11 @@
   Created: 16.10.2019
 """
 import sys
+import os
 
 import numpy as np
 import multiprocessing as mp
+from importlib import import_module
 
 import neurodecode.decoder.features as features
 
@@ -83,7 +85,7 @@ def batch_run(cfg_module):
     """
     For batch run
     """
-    cfg = pu.load_config(cfg_module)
+    cfg = load_config(cfg_module)
     cfg = check_config(cfg)
     run(cfg)    
 

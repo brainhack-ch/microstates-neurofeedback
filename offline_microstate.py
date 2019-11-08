@@ -8,9 +8,11 @@
 import sys
 import cv2
 import time 
+import os
 import multiprocessing as mp
 import pygame.mixer as pgmixer
 
+from importlib import import_module
 from builtins import input
 
 import neurodecode.utils.pycnbi_utils as pu
@@ -147,7 +149,7 @@ def batch_run(cfg_module):
     """
     For batch script
     """
-    cfg = pu.load_config(cfg_module)
+    cfg = load_config(cfg_module)
     check_config(cfg)
     run(cfg)    
 
