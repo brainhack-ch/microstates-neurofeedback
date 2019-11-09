@@ -174,8 +174,8 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
         import pygame
         pygame.mixer.init()
         # load audio files into memory
-        elise = pygame.mixer.Sound("elise.ogg")
-        noise = pygame.mixer.Sound("noise.wav")
+        elise = pygame.mixer.Sound("sounds/elise.ogg")
+        noise = pygame.mixer.Sound("sounds/noise.wav")
         
         if percent > 10:
             noise.stop()
@@ -189,7 +189,7 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
         """elif percent < -10:
             elise.stop()
             noise.play()
-            elise.set_volume(percent/500)
+            noise.set_volume(percent/500)
             """
         
         last_ts = tslist[-1]
