@@ -1,4 +1,4 @@
-DATA_PATH = ''
+DATA_PATH = r'C:\Users\brainhacker\Desktop\nd_data'
 
 TRIGGER_DEVICE = None
 TRIGGER_FILE = r'C:\Users\adesvachez\git\NeuroDecode\neurodecode\triggers\triggerdef_16'
