@@ -170,6 +170,28 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
         
         # Feedback
         
+        # import and initialize pygame mixer
+        import pygame
+        pygame.mixer.init()
+        # load audio files into memory
+        elise = pygame.mixer.Sound("elise.ogg")
+        noise = pygame.mixer.Sound("noise.wav")
+        
+        if percent > 10:
+            noise.stop()
+            elise.play()
+            elise.set_volume(percent/100)
+
+        elif 0 <= percent <= 10:
+            elise.stop()
+            noise.stop()
+
+        """elif percent < -10:
+            elise.stop()
+            noise.play()
+            elise.set_volume(percent/500)
+            """
+        
         last_ts = tslist[-1]
         internal_timer.sleep_atleast(cfg.TIMER_SLEEP)
 
