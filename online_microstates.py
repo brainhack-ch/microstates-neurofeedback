@@ -12,7 +12,11 @@ import sys
 import time
 import numpy as np
 import multiprocessing as mp
+
 from importlib import import_module
+from scipy.signal import argrelextrema, detrend
+
+import matplotlib.pyplot as plt
 
 import neurodecode.utils.pycnbi_utils as pu
 
@@ -125,8 +129,8 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
         # Data acquisition
         #----------------------------------------------------------------------        
         sr.acquire()
-        window, tslist = sr.get_window()    # window = [samples x channels]
-        window = window.T                   # window = [channels x samples]
+        raw, tslist = sr.get_window()       # [samples x channels]
+        raw = raw.T                         # [channels x samples]
                
         # Check if proper real-time acquisition
         tsnew = np.where(np.array(tslist) > last_ts)[0]
@@ -134,12 +138,37 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
             logger.warning('There seems to be delay in receiving data.')
             time.sleep(1)
             continue
-    
+        
         #----------------------------------------------------------------------
-        # ADD YOUR CODE HERE
+        # Data processing
         #----------------------------------------------------------------------
         
-    
+        # Compute the GFP
+        gfp = np.abs(detrend(np.mean(raw, 0)))    # [1 x samples]
+        
+        # Find GFP's peak
+        gfp_peaks = argrelextrema(gfp, np.greater, order=15)     # Order needs to be optimized
+        
+        # Assign dominant microstate
+        count = 0
+        
+        #  Missing first and last microstate --> TO change
+        
+        for p in range(1, len(gfp_peaks[0])-1):
+            correletion = np.array()
+            
+            for i in range(len(micro_template)):
+                correletion.append(np.corrcoef(raw[:, p], micro_template[i]))
+                
+            if np.argmax(correletion) == cfg.MICRO2REGULATE:
+                start = gfp_peaks[0][p - 1] + (gfp_peaks[0][p] - gfp_peaks[0][p-1]) / 2
+                end = gfp_peaks[0][p] + (gfp_peaks[0][p+1] - gfp_peaks[0][p]) / 2
+                count = count + len(range(start, end))
+            
+        # Percentage of the microstate of interest
+        percent = count / raw.shape[1] * 100
+        
+        # Feedback
         
         last_ts = tslist[-1]
         internal_timer.sleep_atleast(cfg.TIMER_SLEEP)
