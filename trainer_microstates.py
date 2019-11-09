@@ -15,14 +15,16 @@ import os
 import numpy as np
 import multiprocessing as mp
 from importlib import import_module
+import mne
+import microstates
 
-import neurodecode.decoder.features as features
+import pycnbi.decoder.features as features
 
-import neurodecode.utils.pycnbi_utils as pu
+import pycnbi.utils.pycnbi_utils as pu
 
-from neurodecode import logger
-from neurodecode.triggers.trigger_def import trigger_def
-from neurodecode.gui.streams import redirect_stdout_to_queue
+from pycnbi import logger
+from pycnbi.triggers.trigger_def import trigger_def
+from pycnbi.gui.streams import redirect_stdout_to_queue
 
 
 #----------------------------------------------------------------------
@@ -61,7 +63,20 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
     # Extract features
     if not state.value:
         sys.exit(-1)
-    
+
+    raw = mne.io.read_raw_brainvision(cfg.DATA_PATH, preload=True)
+    outfile = cfg.OUT_MICROSTATES_FILE
+
+    ch_names = ['P3', 'C3', 'F3', 'Fz', 'F4', 'C4', 'P4', 'Cz', 'Pz', 'Fp1', 'Fp2', 'T3', 'T5', 'O1', 'O2', 'F7', 'F8',
+                'T6', 'T4']
+    raw.pick_channels(ch_names)
+
+    raw.set_montage('standard_1005')
+    raw.set_eeg_reference('average')
+    raw.filter(1, 30)
+    maps, segmentation = microstates.segment(raw.get_data(), n_states=4, max_n_peaks=10000000, max_iter=5000,
+                                             normalize=True)
+    np.savetxt(outfile, maps, delimiter=" ")
     #----------------------------------------------------------------------        
     # ADD YOUR CODE HERE
     #----------------------------------------------------------------------
@@ -71,7 +86,7 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
 def load_config(cfg_file):
     """
     Dynamic loading of a config file.
-    Format the lib to fit the previous developed neurodecode code if subject specific file (not for the templates).
+    Format the lib to fit the previous developed pycnbi code if subject specific file (not for the templates).
     cfg_file: tuple containing the path and the config file name.
     """
     cfg_file = os.path.split(cfg_file)
