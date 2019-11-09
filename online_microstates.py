@@ -151,9 +151,10 @@ def run(cfg, state=mp.Value('i', 1), queue=None):
         
         # Assign dominant microstate
         count = 0
-        
+
+        micro_template = np.loadtxt("./Maps_4states_s2.txt", dtype=float)
+     
         #  Missing first and last microstate --> TO change
-        
         for p in range(1, len(gfp_peaks[0])-1):
             correletion = np.array()
             
